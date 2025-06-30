@@ -1,18 +1,24 @@
-FROM node:16 as build
+FROM node:16 as builder
 
 WORKDIR /usr/src/app
 
+# Copiar archivos de dependencias primero
 COPY package*.json ./
 
-RUN npm install
+# Verificación del contexto
+RUN ls -la && \
+    cat package.json && \
+    npm install --silent
 
-COPY . .
+# Copiar el resto de la aplicación
+COPY src/ src/
+COPY public/ public/
 
 RUN npm run build
 
 FROM nginx:alpine
 
-COPY --from=build /usr/src/app/build /usr/share/nginx/html
+COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 3000
 
