@@ -2,9 +2,13 @@ FROM node:16 as builder
 
 WORKDIR /usr/src/app
 
+# Desactiva completamente las notificaciones de npm
+RUN npm config set update-notifier false
+
 COPY package*.json ./
-RUN (npm install --silent || echo "Ignoring npm warning") && \
-    [ -d "node_modules" ]  # Verifica que se instalaron las dependencias
+
+# Instala dependencias ignorando completamente los warnings
+RUN npm install --silent --no-audit --no-fund
 
 COPY src/ src/
 COPY public/ public/
