@@ -1,11 +1,9 @@
-FROM node:16 as builder
+FROM node:18 as builder  # Cambia a Node 18 (LTS actual)
 
 WORKDIR /usr/src/app
 
 COPY package*.json ./
-
-# Usamos || true para ignorar el código de salida
-RUN ls -la && cat package.json && (npm install --silent || true)
+RUN npm install --silent
 
 COPY src/ src/
 COPY public/ public/
